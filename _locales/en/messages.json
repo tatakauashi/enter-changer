@@ -1,0 +1,47 @@
+{
+  "extensionDescription": {
+    "message": "A Chrome extension that changes Enter to newline and moves send to a shortcut key in AI chat UIs."
+  },
+  "popupDescription": {
+    "message": "On supported chat inputs, Enter inserts a newline, while the platform send shortcut sends the message."
+  },
+  "globalSettingsTitle": {
+    "message": "Global Settings"
+  },
+  "globalSettingsHint": {
+    "message": "Turning this off also stops all per-site settings below."
+  },
+  "enabledTitle": {
+    "message": "Enable enter-changer"
+  },
+  "enabledDescription": {
+    "message": "Enable the Enter and send-shortcut behavior change on all supported sites."
+  },
+  "siteSettingsTitle": {
+    "message": "Per-site Settings"
+  },
+  "siteSettingsHint": {
+    "message": "These settings apply only when the global setting is on."
+  },
+  "chatgptDescription": {
+    "message": "Change key behavior in ChatGPT chat inputs."
+  },
+  "claudeDescription": {
+    "message": "Change key behavior in Claude chat inputs."
+  },
+  "geminiDescription": {
+    "message": "Change key behavior in Gemini chat inputs."
+  },
+  "settingsSaved": {
+    "message": "Settings saved."
+  },
+  "settingsSaveError": {
+    "message": "Failed to save settings."
+  },
+  "settingsLoadError": {
+    "message": "Failed to load settings."
+  },
+  "settingsLoadFailed": {
+    "message": "Could not load settings."
+  }
+}
