@@ -2,7 +2,8 @@
   "manifest_version": 3,
   "name": "enter-changer",
   "version": "0.1.0",
-  "description": "ChatGPT / Claude / Gemini で Enter を改行、送信ショートカットを切り替える Chrome 拡張です。",
+  "default_locale": "en",
+  "description": "__MSG_extensionDescription__",
   "permissions": [
     "storage"
   ],

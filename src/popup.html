@@ -9,27 +9,71 @@
   <body>
     <main class="popup">
       <h1 class="popup__title">enter-changer</h1>
-      <p class="popup__description">ChatGPT の Enter / Ctrl + Enter の動作を切り替えます。</p>
+      <p class="popup__description" data-i18n="popupDescription"></p>
 
-      <label class="toggle">
-        <input id="enabled" type="checkbox" />
-        <span>機能全体を有効にする</span>
-      </label>
+      <section class="setting-group setting-group--primary" aria-labelledby="global-setting-title">
+        <div class="setting-group__header">
+          <p id="global-setting-title" class="setting-group__title" data-i18n="globalSettingsTitle"></p>
+          <p class="setting-group__hint" data-i18n="globalSettingsHint"></p>
+        </div>
 
-      <label class="toggle">
-        <input id="site-chatgpt" type="checkbox" />
-        <span>ChatGPT で有効にする</span>
-      </label>
+        <label class="toggle-card toggle-card--primary" for="enabled">
+          <span class="toggle-card__copy">
+            <span class="toggle-card__title" data-i18n="enabledTitle"></span>
+            <span class="toggle-card__description" data-i18n="enabledDescription"></span>
+          </span>
+          <span class="switch">
+            <input id="enabled" type="checkbox" />
+            <span class="switch__track" aria-hidden="true"></span>
+          </span>
+        </label>
+      </section>
 
-      <label class="toggle">
-        <input id="site-claude" type="checkbox" />
-        <span>Claude で有効にする</span>
-      </label>
+      <section
+        id="site-settings-section"
+        class="setting-group"
+        aria-labelledby="site-settings-title"
+      >
+        <div class="setting-group__header">
+          <p id="site-settings-title" class="setting-group__title" data-i18n="siteSettingsTitle"></p>
+          <p class="setting-group__hint" data-i18n="siteSettingsHint"></p>
+        </div>
 
-      <label class="toggle">
-        <input id="site-gemini" type="checkbox" />
-        <span>Gemini で有効にする</span>
-      </label>
+        <div class="toggle-list">
+          <label class="toggle-card" for="site-chatgpt">
+            <span class="toggle-card__copy">
+              <span class="toggle-card__title">ChatGPT</span>
+              <span class="toggle-card__description" data-i18n="chatgptDescription"></span>
+            </span>
+            <span class="switch">
+              <input id="site-chatgpt" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+            </span>
+          </label>
+
+          <label class="toggle-card" for="site-claude">
+            <span class="toggle-card__copy">
+              <span class="toggle-card__title">Claude</span>
+              <span class="toggle-card__description" data-i18n="claudeDescription"></span>
+            </span>
+            <span class="switch">
+              <input id="site-claude" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+            </span>
+          </label>
+
+          <label class="toggle-card" for="site-gemini">
+            <span class="toggle-card__copy">
+              <span class="toggle-card__title">Gemini</span>
+              <span class="toggle-card__description" data-i18n="geminiDescription"></span>
+            </span>
+            <span class="switch">
+              <input id="site-gemini" type="checkbox" />
+              <span class="switch__track" aria-hidden="true"></span>
+            </span>
+          </label>
+        </div>
+      </section>
 
       <p id="status" class="status" aria-live="polite"></p>
     </main>

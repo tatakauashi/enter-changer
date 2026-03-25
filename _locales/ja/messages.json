@@ -1,0 +1,47 @@
+{
+  "extensionDescription": {
+    "message": "AI チャット画面で Enter を改行、送信ショートカットを別キーに切り替える Chrome 拡張です。"
+  },
+  "popupDescription": {
+    "message": "対象サイトの入力欄で、Enter を改行、送信は環境ごとのショートカットに切り替えます。"
+  },
+  "globalSettingsTitle": {
+    "message": "全体設定"
+  },
+  "globalSettingsHint": {
+    "message": "ここを OFF にすると、下のサイト別設定もまとめて停止します。"
+  },
+  "enabledTitle": {
+    "message": "機能全体を有効にする"
+  },
+  "enabledDescription": {
+    "message": "すべての対応サイトで Enter と送信ショートカットの切り替えを有効にします。"
+  },
+  "siteSettingsTitle": {
+    "message": "サイト別設定"
+  },
+  "siteSettingsHint": {
+    "message": "全体設定が ON のときだけ反映されます。"
+  },
+  "chatgptDescription": {
+    "message": "ChatGPT の入力欄でキー動作を切り替えます。"
+  },
+  "claudeDescription": {
+    "message": "Claude の入力欄でキー動作を切り替えます。"
+  },
+  "geminiDescription": {
+    "message": "Gemini の入力欄でキー動作を切り替えます。"
+  },
+  "settingsSaved": {
+    "message": "設定を保存しました。"
+  },
+  "settingsSaveError": {
+    "message": "設定の保存に失敗しました。"
+  },
+  "settingsLoadError": {
+    "message": "設定の読み込みに失敗しました。"
+  },
+  "settingsLoadFailed": {
+    "message": "設定を読み込めませんでした。"
+  }
+}
