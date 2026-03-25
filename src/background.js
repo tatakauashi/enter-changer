@@ -2,6 +2,7 @@ const DEFAULT_SETTINGS = {
   enabled: true,
   sites: {
     chatgpt: true,
+    claude: true,
   },
 };
 

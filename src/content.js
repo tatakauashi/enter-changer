@@ -3,6 +3,7 @@
     enabled: true,
     sites: {
       chatgpt: true,
+      claude: true,
     },
   };
 
