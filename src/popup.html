@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>enter-changer</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <h1 class="popup__title">enter-changer</h1>
+      <p class="popup__description">ChatGPT の Enter / Ctrl + Enter の動作を切り替えます。</p>
+
+      <label class="toggle">
+        <input id="enabled" type="checkbox" />
+        <span>機能全体を有効にする</span>
+      </label>
+
+      <label class="toggle">
+        <input id="site-chatgpt" type="checkbox" />
+        <span>ChatGPT で有効にする</span>
+      </label>
+
+      <p id="status" class="status" aria-live="polite"></p>
+    </main>
+
+    <script src="./popup.js"></script>
+  </body>
+</html>

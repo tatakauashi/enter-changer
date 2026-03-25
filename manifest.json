@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "enter-changer",
+  "version": "0.1.0",
+  "description": "ChatGPT で Enter を改行、Ctrl + Enter を送信に切り替える Chrome 拡張です。",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "action": {
+    "default_popup": "src/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": [
+        "src/sites.js",
+        "src/content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ]
+}
