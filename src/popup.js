@@ -3,12 +3,14 @@ const DEFAULT_SETTINGS = {
   sites: {
     chatgpt: true,
     claude: true,
+    gemini: true,
   },
 };
 
 const enabledInput = document.getElementById("enabled");
 const chatgptInput = document.getElementById("site-chatgpt");
 const claudeInput = document.getElementById("site-claude");
+const geminiInput = document.getElementById("site-gemini");
 const statusElement = document.getElementById("status");
 
 function normalizeSettings(raw) {
@@ -37,6 +39,7 @@ async function loadSettings() {
   enabledInput.checked = settings.enabled;
   chatgptInput.checked = settings.sites.chatgpt;
   claudeInput.checked = settings.sites.claude;
+  geminiInput.checked = settings.sites.gemini;
 }
 
 async function saveSettings() {
@@ -45,6 +48,7 @@ async function saveSettings() {
     sites: {
       chatgpt: chatgptInput.checked,
       claude: claudeInput.checked,
+      gemini: geminiInput.checked,
     },
   };
 
@@ -65,6 +69,12 @@ chatgptInput.addEventListener("change", () => {
 });
 
 claudeInput.addEventListener("change", () => {
+  saveSettings().catch((error) => {
+    console.error("設定の保存に失敗しました。", error);
+  });
+});
+
+geminiInput.addEventListener("change", () => {
   saveSettings().catch((error) => {
     console.error("設定の保存に失敗しました。", error);
   });

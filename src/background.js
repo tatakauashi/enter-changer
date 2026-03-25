@@ -3,6 +3,7 @@ const DEFAULT_SETTINGS = {
   sites: {
     chatgpt: true,
     claude: true,
+    gemini: true,
   },
 };
 
