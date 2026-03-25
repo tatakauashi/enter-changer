@@ -5,11 +5,22 @@
 現在の初期実装では **ChatGPT** のみを対象にし、次の動作を提供します。
 
 - `Enter` で改行
-- `Ctrl + Enter` で送信
+- Windows / Linux では `Ctrl + Enter` で送信
 - Mac では `Command + Enter` で送信
 - 機能全体の ON / OFF
 - ChatGPT 向け設定の ON / OFF
 - 日本語 IME 変換中は介入しない
+
+## 現在確認できていること
+
+手動確認で、次の動作を確認済みです。
+
+- ChatGPT の入力欄で `Enter` で改行できる
+- Mac では `Command + Enter` で送信できる
+- Windows では `Ctrl + Enter` で送信できる
+- popup の「機能全体を有効にする」が動作する
+- popup の「ChatGPT で有効にする」が動作する
+- 設定が保存され、再読み込み後も反映される
 
 ## 現在の対応範囲
 
@@ -121,7 +132,8 @@ ChatGPT ページ上で動作する本体です。
 
 ### 送信方法
 
-`Ctrl + Enter` では、まず送信ボタンのクリックを試みます。
+Windows / Linux では `Ctrl + Enter`、Mac では `Command + Enter` で送信します。
+送信時は、まず送信ボタンのクリックを試みます。
 強引な synthetic event は増やさず、壊れやすい処理を避ける方針です。
 
 ## 使い方
@@ -178,14 +190,22 @@ ChatGPT ページ上で動作する本体です。
 
 ## 手動確認項目
 
+### 確認済み
+
 - 拡張の読み込み時に manifest エラーが出ない
 - popup が開く
 - 設定が保存される
 - ChatGPT の入力欄で `Enter` で改行できる
 - ChatGPT の入力欄で Windows / Linux は `Ctrl + Enter`、Mac は `Command + Enter` で送信できる
+- 機能全体を OFF / ON できる
+- ChatGPT を OFF / ON できる
+
+### 引き続き確認したい項目
+
 - 日本語 IME 変換中の Enter が壊れない
-- 機能全体を OFF にすると元の挙動に戻る
-- ChatGPT を OFF にすると元の挙動に戻る
+- 機能全体を OFF にしたとき、ページの元の挙動に確実に戻る
+- ChatGPT を OFF にしたとき、ページの元の挙動に確実に戻る
+- ChatGPT 側の DOM 変更後も入力欄判定と送信ボタン判定が維持できる
 
 ## 今後の予定
 
