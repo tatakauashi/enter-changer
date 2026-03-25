@@ -1,55 +1,35 @@
+[English README](./README_en.md)
+
 # enter-changer
 
-`enter-changer` は、AI チャット画面での Enter キー操作を切り替えるための Chrome 拡張です。
+`enter-changer` は、AI チャット画面の Enter キー動作を切り替えるための Chrome 拡張です。
 
-現在の初期実装では **ChatGPT** と **Claude** と **Gemini** を対象にし、次の動作を提供します。
+現在は **ChatGPT**、**Claude**、**Gemini** に対応しています。対象サイトの入力欄に対して、次の動作を提供します。
 
 - `Enter` で改行
 - Windows / Linux では `Ctrl + Enter` で送信
 - Mac では `Command + Enter` で送信
 - 機能全体の ON / OFF
-- ChatGPT 向け設定の ON / OFF
-- Claude 向け設定の ON / OFF
-- Gemini 向け設定の ON / OFF
-- 日本語 IME 変換中は介入しない
+- サイト別の ON / OFF
+- 日本語 IME 変換中の Enter を妨げない実装
 
-## 現在確認できていること
+## 特徴
 
-手動確認で、次の動作を確認済みです。
-
-- ChatGPT の入力欄で `Enter` で改行できる
-- Mac では `Command + Enter` で送信できる
-- Windows では `Ctrl + Enter` で送信できる
-- popup の「機能全体を有効にする」が動作する
-- popup の「ChatGPT で有効にする」が動作する
-- Claude の入力欄で `Enter` で改行できる
-- Claude の入力欄で Windows / Linux は `Ctrl + Enter`、Mac は `Command + Enter` で送信できる
-- popup の「Claude で有効にする」が動作する
-- Claude で機能全体の ON / OFF が動作する
-- Claude でサイト別 ON / OFF が動作する
-- 設定が保存され、再読み込み後も反映される
-
-## 現在の対応範囲
-
-- 対応サイト
-  - `https://chatgpt.com/*`
-  - `https://chat.openai.com/*`
-  - `https://claude.ai/*`
-  - `https://gemini.google.com/*`
-- 対応ブラウザ
-  - Chrome 系ブラウザ
-- 実装方式
-  - Chrome Extension Manifest V3
-  - JavaScript
-  - `chrome.storage.local`
-
-`chat.openai.com` は `chatgpt.com` と同じ扱いで読み込むようにしていますが、初期実装は ChatGPT / Claude / Gemini の最小対応を優先しています。
+- popup から全体設定とサイト別設定を切り替えられます
+- popup はブラウザ言語に応じて日本語 / 英語で表示されます
+- ChatGPT / Claude / Gemini ごとの差分は `src/sites.js` に分離しています
+- 設定は `chrome.storage.local` に保存されます
 
 ## ディレクトリ構成
 
 ```text
 enter-changer/
 ├─ manifest.json
+├─ _locales/
+│  ├─ en/
+│  │  └─ messages.json
+│  └─ ja/
+│     └─ messages.json
 ├─ src/
 │  ├─ background.js
 │  ├─ content.js
@@ -59,195 +39,81 @@ enter-changer/
 │  └─ sites.js
 ├─ AGENTS.md
 ├─ LICENSE
-└─ README.md
+├─ README.md
+└─ README_en.md
 ```
 
-## 各ファイルの役割
+## セットアップ
 
-### `manifest.json`
+1. Chrome で `chrome://extensions/` を開きます
+2. 「デベロッパー モード」を ON にします
+3. 「パッケージ化されていない拡張機能を読み込む」を選び、このディレクトリを指定します
+4. 拡張一覧に `enter-changer` が表示されることを確認します
 
-Manifest V3 の設定です。
+## popup の使い方
 
-- popup
-- background service worker
-- ChatGPT / Claude / Gemini 向け content script
-- `storage` 権限
+1. 拡張アイコンから `enter-changer` を開きます
+2. 「機能全体を有効にする」で全体 ON / OFF を切り替えます
+3. 必要に応じて ChatGPT / Claude / Gemini のサイト別トグルを切り替えます
+4. 全体設定が OFF のときは、サイト別設定は無効表示になります
 
-### `src/background.js`
+## 多言語文言の追加方法
 
-初回インストール時に既定設定を補完します。
+popup の文言は `_locales/<言語コード>/messages.json` で管理します。既存の日本語・英語に文言を追加する場合は、次の手順で進めます。
 
-既定値:
+1. `src/popup.html` または `src/popup.js` で新しい文言キーを使う場所を決めます
+2. HTML の固定文言なら `data-i18n="messageKey"` を追加します
+3. JavaScript から使う文言なら `chrome.i18n.getMessage("messageKey")` を呼びます
+4. `_locales/ja/messages.json` に `messageKey` を追加します
+5. `_locales/en/messages.json` にも同じ `messageKey` を追加します
+6. 拡張を再読み込みして、日本語・英語の両方で表示を確認します
+
+`messages.json` の値は、次の形式で追加します。
 
 ```json
 {
-  "enabled": true,
-  "sites": {
-    "chatgpt": true,
-    "claude": true,
-    "gemini": true
+  "exampleMessage": {
+    "message": "表示したい文言"
   }
 }
 ```
 
-### `src/popup.html` / `src/popup.js` / `src/styles.css`
+## 新しい言語の追加方法
 
-拡張アイコンから開く最小設定 UI です。
+フランス語のような新しい言語を追加する場合は、既存ロケールをコピーして新しい言語コードのフォルダを作ります。
 
-- 機能全体の ON / OFF
-- ChatGPT の ON / OFF
-- Claude の ON / OFF
-- Gemini の ON / OFF
-- `chrome.storage.local` への保存
+1. `_locales/fr/` のように新しい言語コードのディレクトリを作成します
+2. `_locales/en/messages.json` か `_locales/ja/messages.json` を元にして `_locales/fr/messages.json` を作成します
+3. すべてのキーを同じ名前でそろえたまま、`message` の値だけを翻訳します
+4. popup で使っているすべてのキーが新言語にも存在することを確認します
+5. 拡張を再読み込みして、対象言語のブラウザ UI で表示を確認します
 
-### `src/sites.js`
+例:
 
-サイトごとの差分をまとめる場所です。
+```text
+_locales/
+├─ en/
+│  └─ messages.json
+├─ fr/
+│  └─ messages.json
+└─ ja/
+   └─ messages.json
+```
 
-初期実装では ChatGPT 用、Claude 用、Gemini 用のアダプタを持ちます。
+この拡張では `manifest.json` の `default_locale` が `en` なので、対象言語のロケールが見つからない場合は英語が使われます。
 
-- ホスト判定
-- 対象入力欄判定
-- 送信ボタン探索
+## 動作確認の観点
 
-### `src/content.js`
-
-ChatGPT / Claude / Gemini ページ上で動作する本体です。
-
-- 設定の読込
-- 対象入力欄の判定
-- `keydown` の監視
-- IME 変換中の除外
-- `Enter` の改行化
-- `Ctrl + Enter` / `Command + Enter` の送信
-
-## 動作方針
-
-### IME 安全性
-
-日本語 IME を壊さないことを最優先にしています。
-
-そのため、少なくとも次の場合は Enter の挙動を書き換えません。
-
-- `event.isComposing` が `true`
-- `keyCode === 229`
-
-### 入力欄の対象範囲
-
-ページ全体の Enter は横取りせず、ChatGPT / Claude / Gemini の入力欄と判断できる要素にだけ適用します。
-
-初期実装では、次の条件を組み合わせて判定しています。
-
-- `textarea`
-- `contenteditable`
-- `role="textbox"`
-- composer 周辺要素に属していること
-
-### 送信方法
-
-Windows / Linux では `Ctrl + Enter`、Mac では `Command + Enter` で送信します。
-送信時は、まず送信ボタンのクリックを試みます。
-強引な synthetic event は増やさず、壊れやすい処理を避ける方針です。
-
-## 使い方
-
-1. Chrome の拡張機能管理画面を開く
-2. デベロッパーモードを有効にする
-3. 「パッケージ化されていない拡張機能を読み込む」からこのディレクトリを選ぶ
-4. ChatGPT または Claude または Gemini を開く
-5. popup で ON / OFF を確認する
-
-## Chrome への適用方法
-
-### 1. 拡張機能として読み込む
-
-1. Chrome で `chrome://extensions/` を開く
-2. 画面右上の「デベロッパー モード」を ON にする
-3. 「パッケージ化されていない拡張機能を読み込む」をクリックする
-4. このリポジトリのディレクトリ `enter-changer` を選ぶ
-5. 一覧に `enter-changer` が表示されれば読み込み完了
-
-### 2. popup で設定する
-
-1. Chrome のツールバーにある拡張機能アイコンをクリックする
-2. `enter-changer` を開く
-3. 次の項目が ON になっていることを確認する
-
-- 機能全体を有効にする
-- ChatGPT で有効にする
-- Claude で有効にする
-- Gemini で有効にする
-
-### 3. ChatGPT で動作を確認する
-
-1. `https://chatgpt.com/` を開く
-2. 入力欄をクリックする
-3. `Enter` を押して改行されることを確認する
-4. Windows / Linux は `Ctrl + Enter`、Mac は `Command + Enter` を押して送信されることを確認する
-5. 日本語 IME 変換中の Enter が通常どおり使えることを確認する
-
-### 4. Claude で動作を確認する
-
-1. `https://claude.ai/` を開く
-2. 入力欄をクリックする
-3. `Enter` を押して改行されることを確認する
-4. Windows / Linux は `Ctrl + Enter`、Mac は `Command + Enter` を押して送信されることを確認する
-5. 日本語 IME 変換中の Enter が通常どおり使えることを確認する
-
-### 5. Gemini で動作を確認する
-
-1. `https://gemini.google.com/` を開く
-2. 入力欄をクリックする
-3. `Enter` を押して改行されることを確認する
-4. Windows / Linux は `Ctrl + Enter`、Mac は `Command + Enter` を押して送信されることを確認する
-5. 日本語 IME 変換中の Enter が通常どおり使えることを確認する
-
-### 6. ファイルを更新したあとに反映する
-
-このリポジトリ内のファイルを変更したあと、Chrome 側には自動反映されません。
-
-反映するには次の手順を行います。
-
-1. `chrome://extensions/` を開く
-2. `enter-changer` のカードを探す
-3. リロードボタンを押す
-4. ChatGPT のタブも再読み込みする
-
-### 7. 読み込みに失敗したとき
-
-- `manifest.json` の記述エラーがないか確認する
-- `src/` 配下のファイル名が `manifest.json` の参照先と一致しているか確認する
-- `chrome://extensions/` の `enter-changer` カード内に出るエラー表示を確認する
-
-## 手動確認項目
-
-### 確認済み
-
-- 拡張の読み込み時に manifest エラーが出ない
 - popup が開く
-- 設定が保存される
-- 日本語 IME 変換中の Enter が壊れない
-- ChatGPT の入力欄で `Enter` で改行できる
-- ChatGPT の入力欄で Windows / Linux は `Ctrl + Enter`、Mac は `Command + Enter` で送信できる
-- Claude の入力欄で `Enter` で改行できる
-- Claude の入力欄で Windows / Linux は `Ctrl + Enter`、Mac は `Command + Enter` で送信できる
-- Gemini の入力欄で `Enter` で改行できる
-- Gemini の入力欄で Windows / Linux は `Ctrl + Enter`、Mac は `Command + Enter` で送信できる
-- ChatGPT で機能全体を OFF / ON できることを Mac / Windows 11 で確認済み
-- Claude で機能全体を OFF / ON できることを Mac / Windows 11 で確認済み
-- Gemini で機能全体を OFF / ON できることを Mac / Windows 11 で確認済み
-- ChatGPT でサイト別 ON / OFF できることを Mac / Windows 11 で確認済み
-- Claude でサイト別 ON / OFF できることを Mac / Windows 11 で確認済み
-- Gemini でサイト別 ON / OFF できることを Mac / Windows 11 で確認済み
+- popup の文言がブラウザ言語に応じて切り替わる
+- 設定が保存され、再読み込み後も保持される
+- ChatGPT / Claude / Gemini で `Enter` が改行として動く
+- ChatGPT / Claude / Gemini で送信ショートカットが動く
+- IME 変換中の Enter が妨げられない
 
-### 引き続き確認したい項目
+## 今後の候補
 
-- ChatGPT / Claude / Gemini 側の DOM 変更後も入力欄判定と送信ボタン判定が維持できる
-
-## 今後の予定
-
-次の段階で、必要に応じて対応サイトを追加します。
-
-- Grok
-
-ただし、まずは ChatGPT / Claude / Gemini 対応を安定させることを優先します。
+- Grok 対応
+- options page の追加
+- 対応サイト追加
+- DOM 変化時の診断支援
