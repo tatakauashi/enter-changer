@@ -28,6 +28,15 @@
     );
   }
 
+  function isWithinClaudeComposer(element) {
+    return Boolean(
+      element.closest("fieldset") ||
+        element.closest("form") ||
+        element.closest("[data-testid='chat-input']") ||
+        element.closest("[class*='ProseMirror']")
+    );
+  }
+
   function toHTMLElement(node) {
     if (node instanceof HTMLElement) {
       return node;
@@ -66,6 +75,25 @@
     for (const selector of selectors) {
       const button = root.querySelector(selector);
 
+      if (button instanceof HTMLButtonElement && !button.disabled) {
+        return button;
+      }
+    }
+
+    return null;
+  }
+
+  function findClaudeSendButton(input) {
+    const root = input.closest("form") || input.closest("fieldset") || document;
+    const selectors = [
+      "button[aria-label*='Send']",
+      "button[aria-label*='送信']",
+      "button[data-testid='send-button']",
+      "button[type='submit']",
+    ];
+
+    for (const selector of selectors) {
+      const button = root.querySelector(selector);
       if (button instanceof HTMLButtonElement && !button.disabled) {
         return button;
       }
@@ -147,6 +175,60 @@
     return false;
   }
 
+  function insertClaudeNewline(target) {
+    if (target instanceof HTMLTextAreaElement) {
+      const start = target.selectionStart;
+      const end = target.selectionEnd;
+      const value = target.value;
+
+      target.value = `${value.slice(0, start)}\n${value.slice(end)}`;
+      target.selectionStart = start + 1;
+      target.selectionEnd = start + 1;
+      dispatchInputEvent(target, "insertLineBreak");
+      return true;
+    }
+
+    if (!(target instanceof HTMLElement) || !target.isContentEditable) {
+      return false;
+    }
+
+    target.focus({ preventScroll: true });
+
+    const keydownEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      code: "Enter",
+      shiftKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    const keyupEvent = new KeyboardEvent("keyup", {
+      key: "Enter",
+      code: "Enter",
+      shiftKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+
+    const keydownAccepted = target.dispatchEvent(keydownEvent);
+    target.dispatchEvent(keyupEvent);
+
+    if (!keydownAccepted) {
+      return true;
+    }
+
+    if (document.execCommand("insertLineBreak", false)) {
+      dispatchInputEvent(target, "insertLineBreak");
+      return true;
+    }
+
+    if (document.execCommand("insertHTML", false, "<br>")) {
+      dispatchInputEvent(target, "insertLineBreak");
+      return true;
+    }
+
+    return false;
+  }
+
   const chatgptSite = {
     id: "chatgpt",
     matches(hostname) {
@@ -179,5 +261,37 @@
     },
   };
 
-  window.EnterChangerSites = [chatgptSite];
+  const claudeSite = {
+    id: "claude",
+    matches(hostname) {
+      return hostname === "claude.ai";
+    },
+    getTargetInput(element) {
+      const input = findEditableRoot(element);
+
+      if (!input) {
+        return null;
+      }
+
+      return this.isTargetInput(input) ? input : null;
+    },
+    isTargetInput(element) {
+      return isEditableElement(element) && isWithinClaudeComposer(element);
+    },
+    send(input) {
+      const button = findClaudeSendButton(input);
+
+      if (!button) {
+        return false;
+      }
+
+      button.click();
+      return true;
+    },
+    insertNewline(input) {
+      return insertClaudeNewline(input);
+    },
+  };
+
+  window.EnterChangerSites = [chatgptSite, claudeSite];
 })();
