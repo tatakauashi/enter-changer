@@ -2,14 +2,15 @@
   "manifest_version": 3,
   "name": "enter-changer",
   "version": "0.1.0",
-  "description": "ChatGPT / Claude で Enter を改行、送信ショートカットを切り替える Chrome 拡張です。",
+  "description": "ChatGPT / Claude / Gemini で Enter を改行、送信ショートカットを切り替える Chrome 拡張です。",
   "permissions": [
     "storage"
   ],
   "host_permissions": [
     "https://chatgpt.com/*",
     "https://chat.openai.com/*",
-    "https://claude.ai/*"
+    "https://claude.ai/*",
+    "https://gemini.google.com/*"
   ],
   "background": {
     "service_worker": "src/background.js"
@@ -22,7 +23,8 @@
       "matches": [
         "https://chatgpt.com/*",
         "https://chat.openai.com/*",
-        "https://claude.ai/*"
+        "https://claude.ai/*",
+        "https://gemini.google.com/*"
       ],
       "js": [
         "src/sites.js",

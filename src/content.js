@@ -4,6 +4,7 @@
     sites: {
       chatgpt: true,
       claude: true,
+      gemini: true,
     },
   };
 
