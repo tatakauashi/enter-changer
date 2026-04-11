@@ -56,6 +56,10 @@
   }
 
   function handleKeydown(event) {
+    if (!event.isTrusted) {
+      return;
+    }
+
     if (event.key !== "Enter") {
       return;
     }
