@@ -170,10 +170,21 @@
       cancelable: true,
     });
 
+    // 【候補1】synthetic Shift+Enter keydown の dispatch 所要時間を計測
+    const tDispatch0 = performance.now();
     const keydownAccepted = target.dispatchEvent(keydownEvent);
+    const tDispatch1 = performance.now();
+    console.log(`[enter-changer][候補1] synthetic Shift+Enter dispatchEvent 所要時間: ${(tDispatch1 - tDispatch0).toFixed(2)}ms`);
+
+    // 【候補4】keydownAccepted の値を確認
+    // true  = ChatGPT側が preventDefault しなかった（自前の処理も走った可能性あり）
+    // false = ChatGPT側が preventDefault した（改行はChatGPT側が処理済みの可能性あり）
+    console.log(`[enter-changer][候補4] keydownAccepted: ${keydownAccepted} (false=ChatGPT側がpreventDefault済み、true=ChatGPT側も処理継続)`);
+
     target.dispatchEvent(keyupEvent);
 
     if (!keydownAccepted) {
+      console.log(`[enter-changer][候補4] ChatGPT側がpreventDefaultしたため早期return（execCommandは呼ばない）`);
       return true;
     }
 
@@ -187,21 +198,29 @@
       return false;
     }
 
+    // 【候補2】execCommand の連鎖フォールバックを各ステップでログ
+    console.log(`[enter-changer][候補2] insertParagraph を試みる`);
     if (document.execCommand("insertParagraph", false)) {
+      console.log(`[enter-changer][候補2] insertParagraph 成功 → ここで終了`);
       dispatchInputEvent(target, "insertParagraph");
       return true;
     }
 
+    console.log(`[enter-changer][候補2] insertParagraph 失敗 → insertLineBreak を試みる`);
     if (document.execCommand("insertLineBreak", false)) {
+      console.log(`[enter-changer][候補2] insertLineBreak 成功 → ここで終了`);
       dispatchInputEvent(target, "insertLineBreak");
       return true;
     }
 
+    console.log(`[enter-changer][候補2] insertLineBreak 失敗 → insertHTML(<br>) を試みる`);
     if (document.execCommand("insertHTML", false, "<br>")) {
+      console.log(`[enter-changer][候補2] insertHTML 成功 → ここで終了`);
       dispatchInputEvent(target, "insertLineBreak");
       return true;
     }
 
+    console.log(`[enter-changer][候補2] 全execCommand失敗`);
     return false;
   }
 

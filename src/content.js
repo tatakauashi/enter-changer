@@ -68,7 +68,12 @@
       return;
     }
 
+    // 【候補3】resolveTargetInput の所要時間を計測
+    const t0 = performance.now();
     const targetInput = resolveTargetInput(event);
+    const t1 = performance.now();
+    console.log(`[enter-changer][候補3] resolveTargetInput 所要時間: ${(t1 - t0).toFixed(2)}ms`);
+
     if (!targetInput) {
       return;
     }
@@ -86,7 +91,12 @@
 
     event.preventDefault();
     event.stopPropagation();
+
+    // 【候補1・2・4】insertNewline 全体の所要時間を計測
+    const t2 = performance.now();
     if (typeof site.insertNewline === "function" && site.insertNewline(targetInput)) {
+      const t3 = performance.now();
+      console.log(`[enter-changer][候補1,2,4] insertNewline 全体所要時間: ${(t3 - t2).toFixed(2)}ms`);
       return;
     }
   }
@@ -125,6 +135,8 @@
     }
 
     const path = typeof event.composedPath === "function" ? event.composedPath() : [];
+    // 【候補3】走査するノード数を確認
+    console.log(`[enter-changer][候補3] composedPath ノード数: ${path.length}`);
     for (const node of path) {
       const input = site.getTargetInput(node);
       if (input) {
